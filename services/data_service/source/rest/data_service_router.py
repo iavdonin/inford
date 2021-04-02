@@ -18,14 +18,16 @@ class FrameRouter:
     связанные с заборами данных
     """
 
-    def __init__(self, db_service: DbService, key_word: str):
+    def __init__(self, db_service: DbService, key_word: str, loop):
         """
         Args:
             db_service: сервис для работы с БД
             key_word: ключевое слово, используемое для формирования json
+            loop: async loop
         """
         self._db_service = db_service
         self._key_word = key_word
+        self._loop = loop
 
     def get_routes(self) -> List[Route]:
         """
@@ -35,7 +37,7 @@ class FrameRouter:
              Список доступных путей REST API
         """
         routes = [
-            Route(f"/parse-stocks/", self.parse_stocks, methods=['POST']),
+            Route("/parse-stocks/", self.parse_stocks, methods=['POST']),
         ]
         return routes
 
@@ -52,5 +54,5 @@ class FrameRouter:
         return JSONResponse(self._parse_stocks())
 
     def _parse_stocks(self) -> dict:
-        amount = ParseStocks().execute()
+        amount = self._loop.run_until_complete(ParseStocks().execute())
         return {"stocks_parsed": amount}

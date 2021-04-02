@@ -4,12 +4,12 @@ __all__ = ('parse_stocks',)
 
 import os
 
+import aiohttp
 import pandas as pd
-import requests  # TODO: requests -> aio_http
 from bs4 import BeautifulSoup
 
 
-def parse_url(url):
+async def parse_url(url):
     indexs = []
     names = []
     tikers = []
@@ -24,12 +24,17 @@ def parse_url(url):
     capitalization_dollar = []
     volume_change = []
     change_position_by_volume = []
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, 'lxml')
-    table = soup.find('div', class_='trades-table_wrapper').find('table',
-                                                                 class_='simple-little-table '
-                                                                        'trades-table')
-    rows = table.find_all("tr")
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            soup = BeautifulSoup(await resp.text(), 'lxml')
+            table = soup.find('div', class_='trades-table_wrapper').find(
+                'table',
+                class_='simple-little-table trades-table'
+            )
+            rows = table.find_all("tr")
+
+    df = None
     for i in range(2, len(rows)):
         # порядковый номер
         indexs.append(rows[i].find_all("td")[0].text)
@@ -59,18 +64,18 @@ def parse_url(url):
         volume_change.append(rows[i].find_all("td")[16].text)
         # Изм поз по объему
         change_position_by_volume.append(rows[i].find_all("td")[17].text)
-        df = pd.DataFrame({'indexs': indexs, \
-                           'names': names, \
-                           'tikers': tikers, \
-                           'last_price': last_price, \
-                           'persent': persent, \
-                           'volume': volume, \
-                           'week': week, \
-                           'month': month, \
-                           'beginning_year': beginning_year, \
-                           'year': year, \
+        df = pd.DataFrame({'indexs': indexs,
+                           'names': names,
+                           'tikers': tikers,
+                           'last_price': last_price,
+                           'persent': persent,
+                           'volume': volume,
+                           'week': week,
+                           'month': month,
+                           'beginning_year': beginning_year,
+                           'year': year,
                            'capitalization_rub': capitalization_rub,
-                           'capitalization_dollar': capitalization_dollar, \
+                           'capitalization_dollar': capitalization_dollar,
                            'volume_change': volume_change,
                            'change_position_by_volume': change_position_by_volume})
     return df, tikers
@@ -81,13 +86,14 @@ def write_doc(df, name):
     df.to_csv(name_file, index=False, sep='\t')
 
 
-def download_csv_for_tiker(tikers):
+async def download_csv_for_tiker(tikers):
     os.makedirs('tikers_csv/', exist_ok=True)
     unknown_tikers = []
     for name in tikers:
         url = 'https://www.smart-lab.ru/q/' + name + '/f/y/MSFO/download/'
-        r = requests.get(url)
-        soup = BeautifulSoup(r.text, 'lxml')
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                soup = BeautifulSoup(await resp.text(), 'lxml')
         if soup.text[4:29] == '404 - Страница не найдена':
             unknown_tikers.append(name)
         else:
@@ -96,13 +102,15 @@ def download_csv_for_tiker(tikers):
     return unknown_tikers
 
 
-def parse_description_tikers(tikers):
+async def parse_description_tikers(tikers):
     description_tikers = []
     unknown_tikers = []
     for name in tikers:
         url = 'https://www.tinkoff.ru/invest/stocks/' + name + '/'
-        r = requests.get(url)
-        soup = BeautifulSoup(r.text, 'lxml')
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                soup = BeautifulSoup(await resp.text(), 'lxml')
+
         try:
             description_tikers.append(
                 soup.find('div', class_='SecurityInfoPure__wrapper_35vdA').text)
@@ -113,7 +121,7 @@ def parse_description_tikers(tikers):
     return df_description, unknown_tikers_2
 
 
-def parse_stocks() -> int:
+async def parse_stocks() -> int:
     """
     Парсит данные об акциях
 
@@ -121,13 +129,15 @@ def parse_stocks() -> int:
         Количество спарсенных акций.
     """
     url = 'https://www.smart-lab.ru/q/shares/'
-    df, tikers = parse_url(url)
+    df, tikers = await parse_url(url)
     write_doc(df, 'stock_statistics')
-    unknown_tikers = download_csv_for_tiker(tikers)
-    df_description, unknown_tikers_2 = parse_description_tikers(tikers)
+    unknown_tikers = await download_csv_for_tiker(tikers)
+    df_description, unknown_tikers_2 = await parse_description_tikers(tikers)
     write_doc(df_description, 'stock_description')
     return len(tikers)
 
 
 if __name__ == "__main__":
-    parse_stocks()
+    import asyncio
+
+    asyncio.run(parse_stocks())
