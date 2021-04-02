@@ -1,0 +1,8 @@
+aiohttp==3.7.4.post0
+asyncpg==0.22.0
+bs4==0.0.1
+lxml==4.6.3
+pandas==1.2.3
+SQLAlchemy==1.4.4
+starlette==0.14.2
+uvicorn==0.13.4
