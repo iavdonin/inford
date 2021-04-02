@@ -15,8 +15,8 @@ class ServiceBase(ABC):
 
     @abstractmethod
     def __init__(self) -> None:
-        pass\
+        pass
 
     @abstractmethod
-    def execute(self):
+    async def execute(self):
         pass
