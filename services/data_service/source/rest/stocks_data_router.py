@@ -11,22 +11,20 @@ from starlette.routing import Route
 from services import ParseStocks
 
 
-class FrameRouter:
+class StocksDataRouter:
     """
     Класс роутера starlette для поверки времени и координат.
     Позволяет оформить все необходимые http методы,
     связанные с заборами данных
     """
 
-    def __init__(self, db_service: DbService, key_word: str, loop):
+    def __init__(self, db_service: DbService, loop):
         """
         Args:
             db_service: сервис для работы с БД
-            key_word: ключевое слово, используемое для формирования json
             loop: async loop
         """
         self._db_service = db_service
-        self._key_word = key_word
         self._loop = loop
 
     def get_routes(self) -> List[Route]:
