@@ -7,5 +7,12 @@ from .service_base import ServiceBase
 class ParseStocks(ServiceBase):
     """ Сервисный класс, выполняющий сбор данных об акциях и сохранение данных в БД """
 
-    def execute(self):
-        parse_stocks()
+    def execute(self) -> int:
+        """
+        Выполняет парсинг данных об акциях.
+
+        Returns:
+            Количество спарсеных данных.
+        """
+        amount = parse_stocks()
+        return amount

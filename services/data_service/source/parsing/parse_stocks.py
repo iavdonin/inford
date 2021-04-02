@@ -113,13 +113,20 @@ def parse_description_tikers(tikers):
     return df_description, unknown_tikers_2
 
 
-def parse_stocks():
+def parse_stocks() -> int:
+    """
+    Парсит данные об акциях
+
+    Returns:
+        Количество спарсенных акций.
+    """
     url = 'https://www.smart-lab.ru/q/shares/'
     df, tikers = parse_url(url)
     write_doc(df, 'stock_statistics')
     unknown_tikers = download_csv_for_tiker(tikers)
     df_description, unknown_tikers_2 = parse_description_tikers(tikers)
     write_doc(df_description, 'stock_description')
+    return len(tikers)
 
 
 if __name__ == "__main__":
