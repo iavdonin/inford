@@ -132,8 +132,11 @@ async def parse_stocks() -> int:
     df, tikers = await parse_url(url)
     write_doc(df, 'stock_statistics')
     unknown_tikers = await download_csv_for_tiker(tikers)
-    df_description, unknown_tikers_2 = await parse_description_tikers(tikers)
-    write_doc(df_description, 'stock_description')
+
+    # TODO: fix data from tinkoff
+    # df_description, unknown_tikers_2 = await parse_description_tikers(tikers)
+    # write_doc(df_description, 'stock_description')
+
     return len(tikers)
 
 

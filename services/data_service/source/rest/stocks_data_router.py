@@ -3,11 +3,11 @@
 """
 from typing import List
 
-from db.db_services import DbService
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 
+from db import DbService
 from services import ParseStocks
 
 
@@ -35,11 +35,11 @@ class StocksDataRouter:
              Список доступных путей REST API
         """
         routes = [
-            Route("/parse-stocks/", self.parse_stocks, methods=['POST']),
+            Route("/parse-stocks", self.parse_stocks, methods=['POST']),
         ]
         return routes
 
-    def parse_stocks(self, request: Request) -> JSONResponse:
+    async def parse_stocks(self, request: Request) -> JSONResponse:
         """
         http метод для забора кадря для поверки времени и координат
 
@@ -49,8 +49,8 @@ class StocksDataRouter:
         Returns:
              сериализованный JSON объект
         """
-        return JSONResponse(self._parse_stocks())
+        return JSONResponse(await self._parse_stocks())
 
-    def _parse_stocks(self) -> dict:
-        amount = self._loop.run_until_complete(ParseStocks().execute())
+    async def _parse_stocks(self) -> dict:
+        amount = await ParseStocks().execute()
         return {"stocks_parsed": amount}

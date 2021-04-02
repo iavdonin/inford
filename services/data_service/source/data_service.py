@@ -22,7 +22,7 @@ class DataService:
         self.rest_host = rest_host
         self.rest_port = rest_port
         self.db_url = db_url
-        self.db_service = DbService(self.db_url)
+        self.db_service = None  # TODO: Run postgres and None -> DbService(self.db_url)
 
     def run(self):
         """Запуск сервиса"""
