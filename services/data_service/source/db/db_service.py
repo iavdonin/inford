@@ -74,7 +74,7 @@ class DbService:
         url - connection url
         """
         self._url = url
-        self.engine = create_engine(url, client_encoding='utf8')
+        self.engine = create_engine(url)
         self.session_maker = sessionmaker(bind=self.engine, class_=Session)
         self.async_session_maker = sessionmaker(bind=self.engine, class_=AsyncSession)
 
