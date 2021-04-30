@@ -3,10 +3,7 @@
 import asyncio
 from argparse import ArgumentParser
 
-from sqlalchemy.engine import create_engine
-
 from db import DbService
-from db.model import Base
 from rest import RESTHandler
 
 TMP_SECRET = "89fc4c0db893d94a428f8c64b4c606157c1d65cbd13f34590736b20294fc7de5"
@@ -29,10 +26,6 @@ class ClientService:
 
         self._verify_key = TMP_SECRET
         self.algorithm = 'HS256'
-
-    def create_table(self):
-        engine = create_engine(self.db_url)
-        Base.create_all(engine)
 
     def run(self):
         """Запуск сервиса"""

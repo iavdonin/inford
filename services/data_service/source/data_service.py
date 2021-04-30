@@ -3,10 +3,7 @@
 import asyncio
 from argparse import ArgumentParser
 
-from sqlalchemy.engine import create_engine
-
 from db import DbService
-from db.model import Base
 from rest import RESTHandler
 
 
@@ -26,10 +23,6 @@ class DataService:
         self.rest_port = rest_port
         self.db_url = db_url
         self.db_service = DbService(db_url)
-
-    def create_table(self):
-        engine = create_engine(self.db_url)
-        Base.create_all(engine)
 
     def run(self):
         """Запуск сервиса"""
