@@ -1,15 +1,18 @@
 """
 Модуль класса роутера для поверки вермени и координат.
 """
-from typing import List
+from typing import Dict, List
 
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 from starlette.routing import Route
 from starlette.authentication import requires
+from starlette_jwt import JWTUser
 
 from db import DbService
-from services import SignUp, Login, GetCurrentUser
+from services import SignUp, Login
+
+JWTToken = str
 
 
 class ProfileRouter:
@@ -19,20 +22,23 @@ class ProfileRouter:
     связанные с заборами данных
     """
 
-    def __init__(self, db_service: DbService, loop):
+    def __init__(self, db_service: DbService, users: Dict[str, str], loop):
         """
         Args:
             db_service: сервис для работы с БД
+            users: Маппинг JWT - пользователь
             loop: async loop
         """
         self._db_service = db_service
         self._loop = loop
+        self._users = users
 
-    def get_routes(self, url_route: str) -> List[Route]:
+    def get_routes(self) -> List[Route]:
         """
-        Метод получения списка для starlette.routing.Route
-        :param url_route: часть http пути
-        :return: список роутов
+        Метод получения списка для starlette.routing.Route.
+
+        Returns:
+            Список роутов
         """
         routes = [
             Route(f"/users/sign-up", self.sign_up, methods=['POST']),
@@ -47,12 +53,11 @@ class ProfileRouter:
         return Response(status, media_type='text/plain')
 
     async def login(self, request: Request):
-        params = request.json()
+        params = await request.json()
         jwt, status = await Login(self._db_service).execute(params)
+        self._users[jwt] = params['login']
         return Response(status, media_type='text/plain', headers={'Authorization': f'Bearer {jwt}'})
 
     @requires('authenticated')
     async def get_current_user(self, request: Request):
-        jwt = request.headers['Authorization']
-        profile = await GetCurrentUser(self._db_service).execute(jwt)
-        return JSONResponse(profile)
+        return JSONResponse(request.user.payload)

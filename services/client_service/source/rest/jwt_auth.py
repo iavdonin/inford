@@ -1,7 +1,7 @@
 """
 модуль starlette для авторизации через jwt токен.
 """
-from typing import Tuple, Union
+from typing import Dict, Tuple, Union
 
 import jwt
 from starlette.authentication import AuthCredentials, AuthenticationError, BaseUser
@@ -17,8 +17,8 @@ class JWTAuthentication(JWTAuthenticationBackend):
      algorithm: Алгоритм проверки JWT
     """
 
-    def __init__(self, secret_key: str, prefix: str,
-                 username_field: str = '', algorithm: str = 'HS256'):
+    def __init__(self, secret_key: str, prefix: str, username_field: str = '',
+                 algorithm: str = 'HS256') -> None:
         super().__init__(secret_key, algorithm, prefix, username_field)
 
     async def authenticate(self, request) -> Union[None, Tuple[AuthCredentials, BaseUser]]:
@@ -35,10 +35,5 @@ class JWTAuthentication(JWTAuthenticationBackend):
                                  audience=self.audience, options=self.options)
         except jwt.InvalidTokenError as exc:
             raise AuthenticationError(str(exc))
-        if self.username_field:
-            user = JWTUser(username=payload[self.username_field], token=token,
-                           payload=payload)
-        else:
-            user = JWTUser(username='', token=token,
-                           payload=payload)
+        user = JWTUser(username=payload['login'], token=token, payload=payload)
         return AuthCredentials(["authenticated"]), user

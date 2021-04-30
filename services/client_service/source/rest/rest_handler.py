@@ -3,6 +3,8 @@
 Модуль обработки rest запросов
 """
 
+from typing import Dict
+
 from db import DbService
 from starlette.applications import Starlette
 from starlette.middleware.authentication import AuthenticationMiddleware
@@ -10,6 +12,8 @@ from uvicorn import Config, Server
 
 from .jwt_auth import JWTAuthentication
 from .profile_router import ProfileRouter
+
+JWTToken = str
 
 
 class RESTHandler:
