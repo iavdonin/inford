@@ -6,8 +6,10 @@ from argparse import ArgumentParser
 from db import DbService
 from rest import RESTHandler
 
+TMP_SECRET = "89fc4c0db893d94a428f8c64b4c606157c1d65cbd13f34590736b20294fc7de5"
 
-class DataService:
+
+class ClientService:
     """Класс запуска сервиса"""
 
     def __init__(self, db_url, rest_host, rest_port):
@@ -17,16 +19,18 @@ class DataService:
             rest_port: port of rest handler
             rest_host: host of rest handler
         """
-        self.connection = None
-        self.channel = None
         self.rest_host = rest_host
         self.rest_port = rest_port
         self.db_url = db_url
         self.db_service = DbService(db_url)
 
+        self._verify_key = TMP_SECRET
+        self.algorithm = 'HS256'
+
     def run(self):
         """Запуск сервиса"""
-        rest_handler = RESTHandler(self.db_service, self.rest_host, self.rest_port)
+        rest_handler = RESTHandler(self.db_service, self.rest_host, self.rest_port,
+                                   self._verify_key, self.algorithm)
         asyncio.run(rest_handler.run())
 
 
@@ -43,5 +47,5 @@ def parse():
 
 if __name__ == '__main__':
     args = parse()
-    service = DataService(db_url=args.db_url, rest_host=args.rest_host, rest_port=args.rest_port)
+    service = ClientService(db_url=args.db_url, rest_host=args.rest_host, rest_port=args.rest_port)
     service.run()
