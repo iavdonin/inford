@@ -2,8 +2,7 @@
 """
 Модуль обработки rest запросов
 """
-
-from typing import Dict
+import asyncio
 
 from db import DbService
 from starlette.applications import Starlette
@@ -20,7 +19,7 @@ class RESTHandler:
     """ REST handler """
 
     def __init__(self, db_service: DbService, host: str, port: int, verify_key: str, algorithm: str,
-                 loop):
+                 loop=None):
         """
         Args:
             db_service: сервис для работы с БД
@@ -32,12 +31,12 @@ class RESTHandler:
         """
         self.host = host
         self.port = port
-        self.loop = loop
+        self.loop = loop or asyncio.get_event_loop()
         self._verify_key = verify_key
         self._algorithm = algorithm
         self._db_service = db_service
 
-        routes = ProfileRouter(db_service, self.loop).get_routes()
+        routes = ProfileRouter(db_service, verify_key, algorithm, self.loop).get_routes()
         self.app = Starlette(debug=True, routes=routes)
         self.app.add_middleware(AuthenticationMiddleware,
                                 backend=JWTAuthentication(secret_key=self._verify_key,

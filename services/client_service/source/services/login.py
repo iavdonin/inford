@@ -35,7 +35,7 @@ class Login(ServiceBase):
             if profile:
                 profile_dict = {col.name: getattr(profile, col.name)
                                 for col
-                                in profile.__table__.columns,
+                                in profile.__table__.columns
                                 if not col.name.startswith('_') and col.name != 'password'}
                 token = jwt.encode(profile_dict, self._secret, self._algorithm)
                 return token.decode("UTF-8")

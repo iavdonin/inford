@@ -22,16 +22,16 @@ class ProfileRouter:
     связанные с заборами данных
     """
 
-    def __init__(self, db_service: DbService, users: Dict[str, str], loop):
+    def __init__(self, db_service: DbService, verify_key: str, algorithm: str, loop):
         """
         Args:
             db_service: сервис для работы с БД
-            users: Маппинг JWT - пользователь
             loop: async loop
         """
         self._db_service = db_service
+        self._verify_key = verify_key
+        self._algorithm = algorithm
         self._loop = loop
-        self._users = users
 
     def get_routes(self) -> List[Route]:
         """
@@ -54,8 +54,8 @@ class ProfileRouter:
 
     async def login(self, request: Request):
         params = await request.json()
-        jwt, status = await Login(self._db_service).execute(params)
-        self._users[jwt] = params['login']
+        jwt, status = await Login(self._db_service, self._verify_key,
+                                  self._algorithm).execute(params)
         return Response(status, media_type='text/plain', headers={'Authorization': f'Bearer {jwt}'})
 
     @requires('authenticated')
