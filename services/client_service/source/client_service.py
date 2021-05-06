@@ -3,7 +3,10 @@
 import asyncio
 from argparse import ArgumentParser
 
+from sqlalchemy.engine import create_engine
+
 from db import DbService
+from db.model import Base
 from rest import RESTHandler
 
 TMP_SECRET = "89fc4c0db893d94a428f8c64b4c606157c1d65cbd13f34590736b20294fc7de5"
@@ -27,8 +30,16 @@ class ClientService:
         self._verify_key = TMP_SECRET
         self.algorithm = 'HS256'
 
+    def create_tables(self):
+        db_url = self.db_url
+        if 'asyncpg' in db_url:
+            db_url = db_url.replace('+asyncpg', '')
+        engine = create_engine(db_url)
+        Base.metadata.create_all(engine)
+
     def run(self):
         """Запуск сервиса"""
+        self.create_tables()
         rest_handler = RESTHandler(self.db_service, self.rest_host, self.rest_port,
                                    self._verify_key, self.algorithm)
         asyncio.run(rest_handler.run())

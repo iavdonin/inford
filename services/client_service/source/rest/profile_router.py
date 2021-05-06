@@ -48,15 +48,19 @@ class ProfileRouter:
         return routes
 
     async def sign_up(self, request: Request):
-        params = request.json()
-        status = await SignUp(self._db_service).execute(params)
+        params = await request.json()
+        status = await SignUp(params, self._db_service).execute()
         return Response(status, media_type='text/plain')
 
     async def login(self, request: Request):
         params = await request.json()
-        jwt, status = await Login(self._db_service, self._verify_key,
-                                  self._algorithm).execute(params)
-        return Response(status, media_type='text/plain', headers={'Authorization': f'Bearer {jwt}'})
+        jwt, status = await Login(params, self._db_service, self._verify_key,
+                                  self._algorithm).execute()
+        if status == 'OK!':
+            return Response(status, media_type='text/plain',
+                            headers={'Authorization': f'Bearer {jwt}'})
+        else:
+            return Response(status, media_type='text/plain')
 
     @requires('authenticated')
     async def get_current_user(self, request: Request):

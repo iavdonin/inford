@@ -1,12 +1,12 @@
 """ Регистрация пользователя """
 
-from typing import Any, Dict, Tuple, Optional
+from typing import Any, Dict, Tuple, Optional, Union
 
 import jwt
+from db.model import ClientProfile
+from sqlalchemy.future import select
 
 from db import DbService
-from db.model import ClientProfile
-
 from .service_base import ServiceBase
 
 
@@ -25,17 +25,24 @@ class Login(ServiceBase):
         self._secret = secret
         self._algorithm = algorithm
 
-    async def execute(self) -> Tuple[str, Optional[str]]:
-        async with self._db_service.session_scope as session:
-            profile = await session.query(
-                ClientProfile
+    async def execute(self) -> Tuple[Union[str, None], Optional[str]]:
+        async with self._db_service.session_scope() as session:
+            profile = await session.execute(
+                select(ClientProfile
                 ).filter(ClientProfile.login == self._params['login']
                 ).filter(ClientProfile.password == self._params['password']
-                ).one()
+                ))
+            profile = profile.first()
             if profile:
-                profile_dict = {col.name: getattr(profile, col.name)
-                                for col
-                                in profile.__table__.columns
-                                if not col.name.startswith('_') and col.name != 'password'}
+                profile_dict = {
+                    'login': profile.ClientProfile.login,
+                    'email': profile.ClientProfile.email,
+                    'firstname': profile.ClientProfile.first_name,
+                    'lastname': profile.ClientProfile.last_name,
+                    'dateOfBirth': profile.ClientProfile.birth_date,
+                    'telephoneNumber': profile.ClientProfile.phone_number
+                }
                 token = jwt.encode(profile_dict, self._secret, self._algorithm)
-                return token.decode("UTF-8")
+                return token, 'OK!'
+            else:
+                return None, 'FAILED!'

@@ -20,8 +20,8 @@ class SignUp(ServiceBase):
         self._db_service = db_service
 
     async def execute(self) -> str:
-        try:
-            async with self._db_service.session_scope() as session:
+        async with self._db_service.session_scope() as session:
+            try:
                 profile = ClientProfile()
                 profile.login = self._params['login']
                 profile.password = self._params['password']
@@ -34,7 +34,7 @@ class SignUp(ServiceBase):
                     if 'dateOfBirth' in self._params.keys() else None
                 profile.phone_number = self._params['telephoneNumber'] \
                     if 'telephoneNumber' in self._params.keys() else None
-                await session.add(profile)
+                session.add(profile)
                 return "OK!"
-        except:
-            return "FAILED!"
+            except:
+                return 'FAILED!'
