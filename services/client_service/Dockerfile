@@ -6,6 +6,6 @@ RUN python -m pip install --upgrade pip && pip install -r /app/requirements.txt
 
 WORKDIR /app
 ENTRYPOINT exec python client_service.py \
-    ${DB_URL:-"postgresql+asyncpg://postgres:postgres@localhost/inford_db"} \
+    ${DB_URL:-"postgresql+asyncpg://postgres:postgres@postgres:5432/"} \
     ${REST_PORT:-8080} \
-    ${REST_HOST:-"127.0.0.1"}
+    ${REST_HOST:-"0.0.0.0"}

@@ -2,8 +2,7 @@
 модель сервисного класса для управления соединением и сессиями.
 """
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 
@@ -74,8 +73,7 @@ class DbService:
         url - connection url
         """
         self._url = url
-        self.engine = create_engine(url)
-        self.session_maker = sessionmaker(bind=self.engine, class_=Session)
+        self.engine = create_async_engine(url)
         self.async_session_maker = sessionmaker(bind=self.engine, class_=AsyncSession)
 
     def close(self):
@@ -93,5 +91,5 @@ class DbService:
         """
         if self._url.find("asyncpg") == -1:
             raise ValueError("can't find async driver in connection string")
-        session_ = self.async_session_maker(expire_on_commit=False, class_=AsyncSession)
+        session_ = self.async_session_maker(expire_on_commit=False)
         return AsyncSessionContext(session_)
