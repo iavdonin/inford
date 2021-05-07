@@ -11,7 +11,7 @@ from starlette.middleware.cors import CORSMiddleware
 from uvicorn import Config, Server
 
 from .cors import (access_control_allow_origin, access_control_allow_methods,
-                   access_control_allow_headers)
+                   access_control_allow_headers, access_control_expose_headers)
 from .jwt_auth import JWTAuthentication
 from .profile_router import ProfileRouter
 
@@ -49,7 +49,8 @@ class RESTHandler:
         self.app.add_middleware(CORSMiddleware,
                                 allow_origins=access_control_allow_origin,
                                 allow_methods=access_control_allow_methods,
-                                allow_headers=access_control_allow_headers)
+                                allow_headers=access_control_allow_headers,
+                                expose_headers=access_control_expose_headers)
 
     async def run(self):
         """
