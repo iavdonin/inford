@@ -7,8 +7,11 @@ import asyncio
 from db import DbService
 from starlette.applications import Starlette
 from starlette.middleware.authentication import AuthenticationMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from uvicorn import Config, Server
 
+from .cors import (access_control_allow_origin, access_control_allow_methods,
+                   access_control_allow_headers)
 from .jwt_auth import JWTAuthentication
 from .profile_router import ProfileRouter
 
@@ -43,6 +46,10 @@ class RESTHandler:
                                                           prefix='Bearer',
                                                           algorithm=self._algorithm),
                                 )
+        self.app.add_middleware(CORSMiddleware,
+                                allow_origins=access_control_allow_origin,
+                                allow_methods=access_control_allow_methods,
+                                allow_headers=access_control_allow_headers)
 
     async def run(self):
         """
