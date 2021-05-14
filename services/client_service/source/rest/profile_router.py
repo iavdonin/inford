@@ -1,12 +1,15 @@
 """
 Модуль класса роутера для поверки вермени и координат.
 """
-from typing import Dict, List
+import json
+from collections import defaultdict
+from typing import List
 
+import aiohttp
+from starlette.authentication import requires
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 from starlette.routing import Route
-from starlette.authentication import requires
 
 from db import DbService
 from services import SignUp, Login
@@ -31,6 +34,7 @@ class ProfileRouter:
         self._verify_key = verify_key
         self._algorithm = algorithm
         self._loop = loop
+        self._tmp_portfolio_storage = defaultdict(dict)
 
     def get_routes(self) -> List[Route]:
         """
@@ -71,19 +75,28 @@ class ProfileRouter:
     @requires('authenticated')
     async def get_analytics(self, request: Request) -> JSONResponse:
         """ Метод для получения аналитики по портфелю """
-        portfolio = await request.json()
-        return JSONResponse(await self._get_analytics(portfolio))
+        login = request.user.payload()['login']
+        portfolio = self._tmp_portfolio_storage[login]
+        request_payload = json.dumps(portfolio)
+        async with aiohttp.ClientSession() as session:
+            async with session.get('http://analysis_service:8080/get-analytics',
+                                   data=request_payload) as response:
+                return JSONResponse(await response.json())
 
     @requires('authenticated')
     async def get_recommendations(self, request: Request) -> JSONResponse:
         """ Метод для получения рекомендаций по портфелю """
-        portfolio = await request.json()
-        return JSONResponse(await self._get_recommendations(portfolio))
+        login = request.user.payload()['login']
+        portfolio = self._tmp_portfolio_storage[login]
+        request_payload = json.dumps(portfolio)
+        async with aiohttp.ClientSession() as session:
+            async with session.get('http://analysis_service:8080/get-recommendations',
+                                   data=request_payload) as response:
+                return JSONResponse(await response.json())
 
     @requires('authenticated')
-    async def _get_analytics(self, portfolio) -> dict:
-        return GetAnalytics(portfolio).execute()
-
-    @requires('authenticated')
-    async def _get_recommendations(self, portfolio) -> dict:
-        return GetRecommendations(portfolio).execute()
+    async def add_stock(self, request: Request) -> Response:
+        login = request.user.payload()['login']
+        new_stock = await request.json()
+        self._tmp_portfolio_storage[login][new_stock['name']] = new_stock['amount']
+        return Response('OK!', media_type='text/plain')
