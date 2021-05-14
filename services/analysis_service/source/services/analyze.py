@@ -89,15 +89,19 @@ def analysis (df):
     final_df = {'diagram':diagram, 'table':table, 'text':text}
     return final_df
 
+def add_cost_sector (df_user):
+    df = pd.read_csv('stock.csv',sep='\t')
+    full_df = df_user.merge(df)
+    return full_df
+
 def main():
-    df_all = parse_stock ()
-    print(len(df_all))
+    #df_all = parse_stock ()
+    #print(len(df_all))
     names = ['MD Medical Group Investments PLC', 'Globaltrans Investment PLC', 'Транснефть']
-    tikers = ['MDMG', 'GLTR', 'TRNFP']
-    price = ['632,2', '462,9', '139950']
-    sector = ['HealthCare', 'Industrials', 'Energy']
     count = [1, 2, 3]
-    df = pd.DataFrame({'names': names, 'tikers': tikers, 'price': price, 'sector': sector, 'count': count})
+    df_user = pd.DataFrame({'names': names, 'count': count})
+
+    df = add_cost_sector(df_user)
     final_df = analysis (df)
     print(final_df)
 
