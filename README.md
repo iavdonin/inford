@@ -5,6 +5,7 @@
 ```shell
 cd db && docker build -t inford_db . && cd ..
 cd services/client_service && docker build -t client_service . && ../..
+cd services/analysis_service && docker build -t analysis_service . && ../..
 ```
 
 ### 2. Создание Docker Network
@@ -14,10 +15,11 @@ docker network create inford_network
 
 ### 3. Запуск БД
 ```shell
-docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres --name postgres --network inford_network inford_db
+docker run --rm -it -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres --name postgres --network inford_network inford_db
 ```
 
 ### 4. Запуск сервисов
 ```shell
-docker run --network inford_network -p 80:80 client_service
+docker run --rm -it --network inford_network --name analysis_service analysis_service 
+docker run --rm -it --network inford_network -p 80:80 --name client_service client_service
 ```
