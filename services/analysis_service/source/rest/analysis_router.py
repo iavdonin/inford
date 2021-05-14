@@ -7,25 +7,13 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 
-from db import DbService
-from services import ParseStocks
+from services import GetAnalytics, GetRecommendations
 
 
 class AnalysisRouter:
     """
-    Класс роутера starlette для поверки времени и координат.
-    Позволяет оформить все необходимые http методы,
-    связанные с заборами данных
+    Класс роутера starlette для получения аналитики и рекомендаций.
     """
-
-    def __init__(self, db_service: DbService, loop):
-        """
-        Args:
-            db_service: сервис для работы с БД
-            loop: async loop
-        """
-        self._db_service = db_service
-        self._loop = loop
 
     def get_routes(self) -> List[Route]:
         """
@@ -35,22 +23,23 @@ class AnalysisRouter:
              Список доступных путей REST API
         """
         routes = [
-            Route("/parse-stocks", self.parse_stocks, methods=['POST']),
+            Route("/get-analytics", self.get_analytics, methods=['GET']),
+            Route("/get-recommendations", self.get_recommendations, methods=['GET']),
         ]
         return routes
 
-    async def parse_stocks(self, request: Request) -> JSONResponse:
-        """
-        http метод для забора кадря для поверки времени и координат
+    async def get_analytics(self, request: Request) -> JSONResponse:
+        """ Метод для получения аналитики по портфелю """
+        portfolio = await request.json()
+        return JSONResponse(await self._get_analytics(portfolio))
 
-        Args:
-            request: объект starlette.requests.Request
+    async def get_recommendations(self, request: Request) -> JSONResponse:
+        """ Метод для получения рекомендаций по портфелю """
+        portfolio = await request.json()
+        return JSONResponse(await self._get_recommendations(portfolio))
 
-        Returns:
-             сериализованный JSON объект
-        """
-        return JSONResponse(await self._parse_stocks())
+    async def _get_analytics(self, portfolio) -> dict:
+        return GetAnalytics(portfolio).execute()
 
-    async def _parse_stocks(self) -> dict:
-        amount = await ParseStocks().execute()
-        return {"stocks_parsed": amount}
+    async def _get_recommendations(self, portfolio) -> dict:
+        return GetRecommendations(portfolio).execute()

@@ -1,5 +1,6 @@
 """ Пакет, содержащий сервисные классы """
 
-from .parse_stocks import ParseStocks
+from .get_analytics import GetAnalytics
+from .get_recommendations import GetRecommendations
 
-__all__ = ['ParseStocks']
+__all__ = ['GetAnalytics', 'GetRecommendations']

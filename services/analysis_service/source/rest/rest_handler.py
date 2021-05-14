@@ -2,31 +2,29 @@
 """
 Модуль обработки rest запросов
 """
+import asyncio
 
 from starlette.applications import Starlette
 from uvicorn import Config, Server
 
-from db import DbService
 from .analysis_router import AnalysisRouter
 
 
 class RESTHandler:
     """ REST handler """
 
-    def __init__(self, db_service: DbService, host: str, port: int, loop):
+    def __init__(self, host: str, port: int):
         """
         Args:
-            db_service: сервис для работы с БД
             host: rest api host
             port: rest api port
             loop instance of event loop
         """
         self.host = host
         self.port = port
-        self.loop = loop
-        self._db_service = db_service
+        self.loop = asyncio.get_event_loop()
 
-        routes = AnalysisRouter(db_service, self.loop).get_routes()
+        routes = AnalysisRouter().get_routes()
         self.app = Starlette(debug=True, routes=routes)
 
     async def run(self):
