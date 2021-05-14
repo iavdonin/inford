@@ -3,10 +3,6 @@
 import asyncio
 from argparse import ArgumentParser
 
-from sqlalchemy.engine import create_engine
-
-from db import DbService
-from db.model import Base
 from rest import RESTHandler
 
 
@@ -16,7 +12,6 @@ class AnalysisService:
     def __init__(self, rest_host, rest_port):
         """
         Args:
-            db_url: connection string to DB Service instance
             rest_port: port of rest handler
             rest_host: host of rest handler
         """

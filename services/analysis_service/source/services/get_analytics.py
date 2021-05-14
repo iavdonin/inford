@@ -10,7 +10,8 @@ class GetAnalytics(ServiceBase):
         self.portfolio = portfolio
 
     async def execute(self):
-        return analyse(self.portfolio)
+        tmp_df = add_cost_sector(self.portfolio)
+        return analyse(tmp_df)
 
 
 def parse_stock():
@@ -69,19 +70,18 @@ def analyse(df):
     diagram_df = df.groupby('sector')['price_all'].sum().reset_index()
     diagram_df['persent'] = diagram_df['price_all'].apply(
         lambda x: format((x / diagram_df['price_all'].sum()) * 100, '.2f'))
-    sfers = ['Other', 'HealthCare', 'IT', 'Industrials', 'RealEstate', 'Consumer', 'Materials',
-             'Telecom',
-             'Financial', 'Utilities', 'Energy']
+    spheres = ['Other', 'HealthCare', 'IT', 'Industrials', 'RealEstate', 'Consumer', 'Materials',
+               'Telecom', 'Financial', 'Utilities', 'Energy']
     price = []
     percent = []
-    for sfer in sfers:
+    for sfer in spheres:
         if sfer in list(diagram_df['sector']):
             price.append(float(diagram_df[diagram_df['sector'] == sfer]['price_all']))
             percent.append(float(diagram_df[diagram_df['sector'] == sfer]['persent']))
         else:
             price.append(0.0)
             percent.append(0.0)
-    diagram = {'sector': sfers,
+    diagram = {'sector': spheres,
                'price': price,
                'percent': percent}
     table = {
@@ -128,36 +128,37 @@ def analyse(df):
         'risk': 'Умеренный',
         'recommendation': recommendation
     }
-    final_df = {'diagram': diagram, 'table': table, 'text': text}
-    return final_df
+    response = {'diagram': diagram, 'table': table, 'text': text}
+    return response
 
 
-def add_cost_sector (user_json):
+def add_cost_sector(user_json):
     names = []
     count = []
     for i in range(len(user_json['stocks'])):
         names.append(user_json['stocks'][i]['name'])
         count.append(user_json['stocks'][i]['amount'])
     df_user = pd.DataFrame({'names': names, 'count': count})
-    df = pd.read_csv('stock.csv',sep='\t')
+    df = pd.read_csv('stock.csv', sep='\t')
     full_df = df_user.merge(df)
     return full_df
 
+
 def main():
-    #df_all = parse_stock ()
-    #print(len(df_all))
+    # df_all = parse_stock ()
+    # print(len(df_all))
     user_json = {'stocks': [
         {'name': 'MD Medical Group Investments PLC',
          'amount': 1},
         {
-        'name': 'Globaltrans Investment PLC',
-                'amount': 2},
-    {
-    'name': 'Транснефть',
-    'amount': 3}
+            'name': 'Globaltrans Investment PLC',
+            'amount': 2},
+        {
+            'name': 'Транснефть',
+            'amount': 3}
     ]}
     df = add_cost_sector(user_json)
-    final_df = analysis (df)
+    final_df = analyse(df)
     print(final_df)
 
 

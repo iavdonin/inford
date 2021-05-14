@@ -7,7 +7,6 @@ from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 from starlette.routing import Route
 from starlette.authentication import requires
-from starlette_jwt import JWTUser
 
 from db import DbService
 from services import SignUp, Login
@@ -43,7 +42,10 @@ class ProfileRouter:
         routes = [
             Route(f"/users/sign-up", self.sign_up, methods=['POST']),
             Route(f"/users/get-current-user", self.get_current_user, methods=['GET']),
-            Route(f"/login", self.login, methods=['POST'])
+            Route(f"/login", self.login, methods=['POST']),
+            Route(f"/get-analytics", self.get_analytics, methods=['GET']),
+            Route(f"/get-recommendations", self.get_recommendations, methods=['GET']),
+            Route(f"/add-stock", self.add_stock, methods=['POST'])
         ]
         return routes
 
@@ -65,3 +67,23 @@ class ProfileRouter:
     @requires('authenticated')
     async def get_current_user(self, request: Request):
         return JSONResponse(request.user.payload)
+
+    @requires('authenticated')
+    async def get_analytics(self, request: Request) -> JSONResponse:
+        """ Метод для получения аналитики по портфелю """
+        portfolio = await request.json()
+        return JSONResponse(await self._get_analytics(portfolio))
+
+    @requires('authenticated')
+    async def get_recommendations(self, request: Request) -> JSONResponse:
+        """ Метод для получения рекомендаций по портфелю """
+        portfolio = await request.json()
+        return JSONResponse(await self._get_recommendations(portfolio))
+
+    @requires('authenticated')
+    async def _get_analytics(self, portfolio) -> dict:
+        return GetAnalytics(portfolio).execute()
+
+    @requires('authenticated')
+    async def _get_recommendations(self, portfolio) -> dict:
+        return GetRecommendations(portfolio).execute()
