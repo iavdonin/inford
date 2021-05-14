@@ -132,21 +132,32 @@ def analyse(df):
     return final_df
 
 
-def add_cost_sector(df_user):
-    df = pd.read_csv('stock.csv', sep='\t')
+def add_cost_sector (user_json):
+    names = []
+    count = []
+    for i in range(len(user_json['stocks'])):
+        names.append(user_json['stocks'][i]['name'])
+        count.append(user_json['stocks'][i]['amount'])
+    df_user = pd.DataFrame({'names': names, 'count': count})
+    df = pd.read_csv('stock.csv',sep='\t')
     full_df = df_user.merge(df)
     return full_df
 
-
 def main():
-    # df_all = parse_stock ()
-    # print(len(df_all))
-    names = ['MD Medical Group Investments PLC', 'Globaltrans Investment PLC', 'Транснефть']
-    count = [1, 2, 3]
-    df_user = pd.DataFrame({'names': names, 'count': count})
-
-    df = add_cost_sector(df_user)
-    final_df = analysis(df)
+    #df_all = parse_stock ()
+    #print(len(df_all))
+    user_json = {'stocks': [
+        {'name': 'MD Medical Group Investments PLC',
+         'amount': 1},
+        {
+        'name': 'Globaltrans Investment PLC',
+                'amount': 2},
+    {
+    'name': 'Транснефть',
+    'amount': 3}
+    ]}
+    df = add_cost_sector(user_json)
+    final_df = analysis (df)
     print(final_df)
 
 
