@@ -20,6 +20,6 @@ docker run --rm -it -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres --na
 
 ### 4. Запуск сервисов
 ```shell
-docker run --rm -it --network inford_network --name analysis_service analysis_service 
+docker run --rm -it --network inford_network --name analysis_service analysis_service
 docker run --rm -it --network inford_network -p 80:80 --name client_service client_service
 ```

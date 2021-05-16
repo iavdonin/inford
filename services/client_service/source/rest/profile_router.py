@@ -79,7 +79,7 @@ class ProfileRouter:
         portfolio = self._tmp_portfolio_storage[login]
         request_payload = json.dumps(portfolio)
         async with aiohttp.ClientSession() as session:
-            async with session.get('http://analysis_service:8080/get-analytics',
+            async with session.get('http://analysis_service:5000/get-analytics',
                                    data=request_payload) as response:
                 return JSONResponse(await response.json())
 
@@ -90,7 +90,7 @@ class ProfileRouter:
         portfolio = self._tmp_portfolio_storage[login]
         request_payload = json.dumps(portfolio)
         async with aiohttp.ClientSession() as session:
-            async with session.get('http://analysis_service:8080/get-recommendations',
+            async with session.get('http://analysis_service:5000/get-recommendations',
                                    data=request_payload) as response:
                 return JSONResponse(await response.json())
 
