@@ -70,7 +70,9 @@ class ProfileRouter:
 
     @requires('authenticated')
     async def get_current_user(self, request: Request):
-        return JSONResponse(request.user.payload)
+        current_user = request.user.payload
+        current_user['stocks'] = self._tmp_portfolio_storage[current_user['login']]
+        return JSONResponse(current_user)
 
     @requires('authenticated')
     async def get_analytics(self, request: Request) -> JSONResponse:
