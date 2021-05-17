@@ -77,7 +77,7 @@ class ProfileRouter:
     @requires('authenticated')
     async def get_analytics(self, request: Request) -> JSONResponse:
         """ Метод для получения аналитики по портфелю """
-        login = request.user.payload()['login']
+        login = request.user.payload['login']
         portfolio = self._tmp_portfolio_storage[login]
         request_payload = json.dumps(portfolio)
         async with aiohttp.ClientSession() as session:
@@ -98,7 +98,7 @@ class ProfileRouter:
 
     @requires('authenticated')
     async def add_stock(self, request: Request) -> Response:
-        login = request.user.payload()['login']
+        login = request.user.payload['login']
         new_stock = await request.json()
         self._tmp_portfolio_storage[login].update(new_stock)
         return Response('OK!', media_type='text/plain')
