@@ -88,7 +88,7 @@ class ProfileRouter:
     @requires('authenticated')
     async def get_recommendations(self, request: Request) -> JSONResponse:
         """ Метод для получения рекомендаций по портфелю """
-        login = request.user.payload()['login']
+        login = request.user.payload['login']
         portfolio = self._tmp_portfolio_storage[login]
         request_payload = json.dumps(portfolio)
         async with aiohttp.ClientSession() as session:
