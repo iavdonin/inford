@@ -132,13 +132,8 @@ def analyse(df):
     return response
 
 
-def add_cost_sector(user_json):
-    names = []
-    count = []
-    for i in range(len(user_json['stocks'])):
-        names.append(user_json['stocks'][i]['name'])
-        count.append(user_json['stocks'][i]['amount'])
-    df_user = pd.DataFrame({'names': names, 'count': count})
+def add_cost_sector(portfolio):
+    df_user = pd.DataFrame({'names': list(portfolio.keys()), 'count': list(portfolio.values())})
     df = pd.read_csv('stock.csv', sep='\t')
     full_df = df_user.merge(df)
     return full_df
