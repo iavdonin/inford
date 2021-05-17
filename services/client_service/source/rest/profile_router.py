@@ -100,5 +100,5 @@ class ProfileRouter:
     async def add_stock(self, request: Request) -> Response:
         login = request.user.payload()['login']
         new_stock = await request.json()
-        self._tmp_portfolio_storage[login][new_stock['name']] = new_stock['amount']
+        self._tmp_portfolio_storage[login].update(new_stock)
         return Response('OK!', media_type='text/plain')
