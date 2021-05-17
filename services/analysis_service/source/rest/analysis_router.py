@@ -39,7 +39,7 @@ class AnalysisRouter:
         return JSONResponse(await self._get_recommendations(portfolio))
 
     async def _get_analytics(self, portfolio) -> dict:
-        return GetAnalytics(portfolio).execute()
+        return await GetAnalytics(portfolio).execute()
 
     async def _get_recommendations(self, portfolio) -> dict:
-        return GetRecommendations(portfolio).execute()
+        return await GetRecommendations(portfolio).execute()
