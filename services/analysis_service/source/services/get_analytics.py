@@ -134,7 +134,7 @@ def analyse(df):
 
 def add_cost_sector(portfolio):
     df_user = pd.DataFrame({'names': list(portfolio.keys()), 'count': list(portfolio.values())})
-    df = pd.read_csv('stock.csv', sep='\t')
+    df = pd.read_csv('services/stock.csv', sep='\t')
     full_df = df_user.merge(df)
     return full_df
 
