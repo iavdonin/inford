@@ -23,3 +23,14 @@ docker run --rm -it -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres --na
 docker run --rm -it --network inford_network --name analysis_service analysis_service
 docker run --rm -it --network inford_network -p 80:80 --name client_service client_service
 ```
+
+Или через docker-compose (тогда должен быть предустановлен docker-compose)
+```shell
+docker-compose up -d
+```
+
+## Или через скрипт
+```shell
+./deploy.sh
+```
+
