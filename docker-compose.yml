@@ -1,0 +1,36 @@
+version: "2.4"
+
+services:
+  postgres:
+    image: inford_db
+    networks:
+      - inford_network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+
+  analysis:
+    image: analysis_service
+    depends_on:
+      postgres:
+        condition: service_started
+    networks:
+      - inford_network
+    restart: always
+
+  client:
+    image: client_service
+    depends_on:
+      postgres:
+        condition: service_started
+      analysis:
+        condition: service_started
+    networks:
+      - inford_network
+    ports:
+      - 80:80
+    restart: always
+
+networks:
+  inford_network:
