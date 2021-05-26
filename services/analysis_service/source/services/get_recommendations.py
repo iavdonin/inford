@@ -1,17 +1,20 @@
+import pandas as pd
+
 from .service_base import ServiceBase
 
 
 class GetRecommendations(ServiceBase):
-    def __init__(self, portfolio):
+    def __init__(self, portfolio, available_money):
         self.portfolio = portfolio
+        self.available_money = available_money
 
     async def execute(self):
-        return recommend(self.portfolio)
+        return recommend(self.portfolio, self.available_money)
 
 
 def recommend(df, available_price):
     start_price = available_price
-    
+
     df['price'] = df['price'].apply(lambda x: float(x.replace(',', '.')))
     df['price_all'] = df['price'] * df['count']
     diagram_df = df.groupby('sector')['price_all'].sum().reset_index()
@@ -31,48 +34,51 @@ def recommend(df, available_price):
     diagram = {'sector': spheres,
                'price': price,
                'percent': percent}
-    #print(diagram)
+    # print(diagram)
     available_spheres = []
     available_percent = []
     for i in range(len(spheres)):
         if percent[i] < 30:
             available_spheres.append(spheres[i])
             available_percent.append(percent[i])
-    available_df = pd.DataFrame({'available_spheres':available_spheres,'available_percent':available_percent})
+    available_df = pd.DataFrame({'available_spheres': available_spheres, 'available_percent': available_percent})
     available_df = available_df.sort_values(by='available_percent')
     available_spheres = available_df['available_spheres']
-    #print(available_spheres)
-    good_stock = pd.read_csv('good_stock.csv',sep='\t')
-    
+    good_stock = pd.read_csv('good_stock.csv', sep='\t')
+
     tiker = []
     name = []
     price = []
-    
+
     for available_spher in available_spheres:
-        for i in range(len(good_stock[good_stock['sector']==available_spher])):
-            #print(str(i)+'___'+available_spher)
-            price_ = float(good_stock[good_stock['sector']==available_spher].sort_values(by='capitalization', ascending=False).iloc[i]['price'].replace(',','.'))
-            
-            if price_ <=available_price:
-                #print(good_stock[good_stock['sector']==available_spher].sort_values(by='capitalization', ascending=False).iloc[i]['tikers'])
-                tiker.append(good_stock[good_stock['sector']==available_spher].sort_values(by='capitalization', ascending=False).iloc[i]['tikers'])
-                name.append(good_stock[good_stock['sector']==available_spher].sort_values(by='capitalization', ascending=False).iloc[i]['names'])
+        for i in range(len(good_stock[good_stock['sector'] == available_spher])):
+            price_ = float(good_stock[good_stock['sector'] == available_spher].sort_values(by='capitalization',
+                                                                                           ascending=False).iloc[i][
+                               'price'].replace(',', '.'))
+
+            if price_ <= available_price:
+                tiker.append(good_stock[good_stock['sector'] == available_spher].sort_values(by='capitalization',
+                                                                                             ascending=False).iloc[i][
+                                 'tikers'])
+                name.append(good_stock[good_stock['sector'] == available_spher].sort_values(by='capitalization',
+                                                                                            ascending=False).iloc[i][
+                                'names'])
                 price.append(price_)
                 break
-    #print(tiker)
+
     recommendations = []
-    
+
     tiker_for_buy = []
     name_for_buy = []
     price_for_buy = []
     amount_for_buy = []
     total_for_buy = []
-    
+
     check = 1
     while check != 0:
         check = 0
         for i in range(len(tiker)):
-            if available_price - price[i] >=0:
+            if available_price - price[i] >= 0:
                 if tiker[i] not in tiker_for_buy:
                     tiker_for_buy.append(tiker[i])
                     name_for_buy.append(name[i])
@@ -84,23 +90,24 @@ def recommend(df, available_price):
                     amount_for_buy[index] += 1
                     check = 1
                 available_price = available_price - price[i]
-    #print(tiker_for_buy)
+
     for i in range(len(tiker_for_buy)):
         total_for_buy.append(price_for_buy[i] * amount_for_buy[i])
-        
+
     for i in range(len(tiker_for_buy)):
         recommendations.append(
-        {
-            'tiker': tiker_for_buy[i],
-            'name' : name_for_buy[i],
-            'price': price_for_buy[i],
-            'amount': amount_for_buy[i],
-            'total': round(total_for_buy[i], 2)
-        }
+            {
+                'tiker': tiker_for_buy[i],
+                'name': name_for_buy[i],
+                'price': price_for_buy[i],
+                'amount': amount_for_buy[i],
+                'total': round(total_for_buy[i], 2)
+            }
         )
     sum_end = round(start_price - available_price, 2)
-    
-    return {'recommendations':recommendations, 'sum':sum_end}
+
+    return {'recommendations': recommendations, 'sum': sum_end}
+
 
 def add_cost_sector(portfolio):
     user_json = portfolio
@@ -110,14 +117,12 @@ def add_cost_sector(portfolio):
         names.append(user_json['stocks'][i]['name'])
         count.append(user_json['stocks'][i]['amount'])
     df_user = pd.DataFrame({'names': names, 'count': count})
-    df = pd.read_csv('stock.csv',sep='\t')
+    df = pd.read_csv('stock.csv', sep='\t')
     full_df = df_user.merge(df)
     return full_df
 
 
 def main():
-    # df_all = parse_stock ()
-    # print(len(df_all))
     user_json = {'stocks': [
         {'name': 'MD Medical Group Investments PLC',
          'amount': 1},

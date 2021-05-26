@@ -35,11 +35,13 @@ class AnalysisRouter:
 
     async def get_recommendations(self, request: Request) -> JSONResponse:
         """ Метод для получения рекомендаций по портфелю """
-        portfolio = await request.json()
-        return JSONResponse(await self._get_recommendations(portfolio))
+        payload = await request.json()
+        portfolio = payload['portfolio']
+        available_money = payload['available_money']
+        return JSONResponse(await self._get_recommendations(portfolio, available_money))
 
     async def _get_analytics(self, portfolio) -> dict:
         return await GetAnalytics(portfolio).execute()
 
-    async def _get_recommendations(self, portfolio) -> dict:
-        return await GetRecommendations(portfolio).execute()
+    async def _get_recommendations(self, portfolio, available_money) -> dict:
+        return await GetRecommendations(portfolio, available_money).execute()
