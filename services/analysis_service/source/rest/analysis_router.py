@@ -37,7 +37,7 @@ class AnalysisRouter:
         """ Метод для получения рекомендаций по портфелю """
         payload = await request.json()
         portfolio = payload['portfolio']
-        available_money = payload['available_money']
+        available_money = payload['money_available']
         return JSONResponse(await self._get_recommendations(portfolio, available_money))
 
     async def _get_analytics(self, portfolio) -> dict:
