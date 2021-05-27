@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     restart: always
 
-  analysis:
+  analysis_service:
     image: analysis_service
     depends_on:
       postgres:
@@ -19,7 +19,7 @@ services:
       - inford_network
     restart: always
 
-  client:
+  client_service:
     image: client_service
     depends_on:
       postgres:
