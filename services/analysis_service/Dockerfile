@@ -7,4 +7,4 @@ RUN python -m pip install --upgrade pip && pip install -r /app/requirements.txt
 WORKDIR /app
 ENTRYPOINT exec python analysis_service.py \
     ${REST_PORT:-5000} \
-    ${REST_HOST:-"127.0.0.1"}
+    ${REST_HOST:-"0.0.0.0"}
