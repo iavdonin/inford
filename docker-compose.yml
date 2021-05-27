@@ -24,7 +24,7 @@ services:
     depends_on:
       postgres:
         condition: service_started
-      analysis:
+      analysis_service:
         condition: service_started
     networks:
       - inford_network
