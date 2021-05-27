@@ -35,6 +35,7 @@ class ProfileRouter:
         self._algorithm = algorithm
         self._loop = loop
         self._tmp_portfolio_storage = defaultdict(dict)
+        self._tmp_money_available_storage = dict()
 
     def get_routes(self) -> List[Route]:
         """
@@ -49,6 +50,7 @@ class ProfileRouter:
             Route(f"/login", self.login, methods=['POST']),
             Route(f"/get-analytics", self.get_analytics, methods=['GET']),
             Route(f"/get-recommendations", self.get_recommendations, methods=['GET']),
+            Route(f"/get-recommendations", self.save_money_available, methods=['POST']),
             Route(f"/add-stock", self.add_stock, methods=['POST'])
         ]
         return routes
@@ -88,15 +90,29 @@ class ProfileRouter:
     @requires('authenticated')
     async def get_recommendations(self, request: Request) -> JSONResponse:
         """ Метод для получения рекомендаций по портфелю """
-        request = await request.json()
         login = request.user.payload['login']
+        try:
+            money_available = self._tmp_money_available_storage.pop(login)
+        except KeyError:
+            return Response('Money available is not specified!', media_type='text/plain')
         portfolio = self._tmp_portfolio_storage[login]
-        request.update({'portfolio': portfolio})
-        request_payload = json.dumps(portfolio)
+        analysis_data = {
+            'portfolio': portfolio,
+            'money_available': money_available
+        }
+        request_payload = json.dumps(analysis_data)
         async with aiohttp.ClientSession() as session:
             async with session.get('http://analysis_service:5000/get-recommendations',
                                    data=request_payload) as response:
                 return JSONResponse(await response.json())
+
+    @requires('authenticated')
+    async def save_money_available(self, request: Request) -> Response:
+        """ Костыль для хранения количества доступных денег при формировании рекомендаций """
+        request_payload = await request.json()
+        login = request.user.payload['login']
+        self._tmp_money_available_storage[login] = float(request_payload['money_available'])
+        return Response('OK!', media_type='text/plain')
 
     @requires('authenticated')
     async def add_stock(self, request: Request) -> Response:
