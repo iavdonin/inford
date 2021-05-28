@@ -1,6 +1,10 @@
+import logging
+
 import pandas as pd
 
 from .service_base import ServiceBase
+
+logger = logging.getLogger(__name__)
 
 
 class GetRecommendations(ServiceBase):
@@ -9,6 +13,7 @@ class GetRecommendations(ServiceBase):
         self.available_money = available_money
 
     async def execute(self):
+        logger.info(f"Portfolio: {self.portfolio}")
         tmp_df = add_cost_sector(self.portfolio)
         return recommend(tmp_df, self.available_money)
 
