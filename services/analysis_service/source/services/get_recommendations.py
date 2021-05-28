@@ -50,7 +50,7 @@ def recommend(df, available_price):
     available_df = pd.DataFrame({'available_spheres': available_spheres, 'available_percent': available_percent})
     available_df = available_df.sort_values(by='available_percent')
     available_spheres = available_df['available_spheres']
-    good_stock = pd.read_csv('good_stock.csv', sep='\t')
+    good_stock = pd.read_csv('services/good_stock.csv', sep='\t')
 
     tiker = []
     name = []
