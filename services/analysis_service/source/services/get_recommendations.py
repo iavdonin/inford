@@ -116,14 +116,9 @@ def recommend(df, available_price):
 
 
 def add_cost_sector(portfolio):
-    user_json = portfolio
-    names = []
-    count = []
-    for i in range(len(user_json['stocks'])):
-        names.append(user_json['stocks'][i]['name'])
-        count.append(user_json['stocks'][i]['amount'])
-    df_user = pd.DataFrame({'names': names, 'count': count})
-    df = pd.read_csv('stock.csv', sep='\t')
+    df_user = pd.DataFrame({'names': list(portfolio.keys()), 'count': list(portfolio.values())})
+    df_user['count'] = df_user['count'].astype(int)
+    df = pd.read_csv('services/stock.csv', sep='\t')
     full_df = df_user.merge(df)
     return full_df
 
