@@ -9,7 +9,8 @@ class GetRecommendations(ServiceBase):
         self.available_money = available_money
 
     async def execute(self):
-        return recommend(self.portfolio, self.available_money)
+        tmp_df = add_cost_sector(self.portfolio)
+        return recommend(tmp_df, self.available_money)
 
 
 def recommend(df, available_price):
