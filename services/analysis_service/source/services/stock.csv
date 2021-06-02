@@ -1,0 +1,143 @@
+names	tikers	price	sector
+MD Medical Group Investments PLC	MDMG	632,2	HealthCare
+ИСКЧ	ISKJ	34,85	HealthCare
+Globaltrans Investment PLC	GLTR	462,9	Industrials
+Аэрофлот	AFLT	66,36	Industrials
+ГК Самолет	SMLT	1546,4	Industrials
+Городские Инновационные Технологии	GRNT	0,45	Industrials
+ГТМ	GTRK	35,85	Industrials
+ДВМП	FESH	14,58	Industrials
+КАМАЗ	KMAZ	69,5	Industrials
+Корпорация ИРКУТ	IRKT	25,06	Industrials
+Мостотрест	MSTT	107	Industrials
+Мультисистема	MSST	2,65	Industrials
+НКХП	NKHP	363	Industrials
+НМТП	NMTP	7,41	Industrials
+Объединенная авиастроительная корпорация	UNAC	0,54	Industrials
+ОВК	UWGN	84	Industrials
+РКК Энергия им.С.П.Королева	RKKE	7510	Industrials
+Сегежа	SGZH	7,99	Industrials
+Совкомфлот	FLOT	89,8	Industrials
+ТрансКонтейнер	TRCN	8595	Industrials
+Трубная Металлургическая Компания	TRMK	73,78	Industrials
+Etalon Group PLC	ETLN	121,94	RealEstate
+Группа ЛСР	LSRG	784	RealEstate
+ПИК	PIKK	1000,1	RealEstate
+Fix Price Group	FIXP	699,2	Consumer
+O'Key Group SA	OKEY	55,18	Consumer
+Ozon Holdings PLC	OZON	4160	Consumer
+АбрауДюрсо	ABRD	200	Consumer
+Аптечная сеть 36,6	APTK	13,61	Consumer
+Белуга Групп ПАО ао	BELU	3600	Consumer
+ГДР X5 RetailGroup	FIVE	2369	Consumer
+Группа Черкизово	GCHE	2232,5	Consumer
+Детский Мир	DSKY	151,46	Consumer
+Красный Октябрь	KROT	426,5	Consumer
+Лента	LNTA	229,8	Consumer
+М.Видео	MVID	709,9	Consumer
+Магнит	MGNT	5155	Consumer
+Обувь России	ORUP	26,62	Consumer
+РусАгро	AGRO	918,4	Consumer
+Русгрэйн	RUGR	12,6	Consumer
+Русская аквакультура	AQUA	292	Consumer
+СОЛЛЕРС	SVAV	223	Consumer
+Фармсинтез	LIFE	5,74	Consumer
+En+ Group	ENPG	947,5	Materials
+Petropavlovsk PLC	POGR	27,47	Materials
+Polymetal	POLY	1677,8	Materials
+Акрон	AKRN	5950	Materials
+АЛРОСА	ALRS	115,68	Materials
+АЛРОСА-Нюрба	ALNU	65400	Materials
+Ашинский метзавод	AMEZ	11,45	Materials
+ВСМПО-АВИСМА	VSMO	25540	Materials
+Лензолото	LNZL	17770	Materials
+Лензолото - привилегированные акции	LNZLP	4360	Materials
+Магнитогорский металлургический комбинат	MAGN	63,7	Materials
+Мечел	MTLR	75,68	Materials
+Мечел - Привилегированные акции	MTLRP	79,3	Materials
+Нижнекамскнефтехим	NKNC	91,1	Materials
+Нижнекамскнефтехим - акции привилегированные	NKNCP	78,08	Materials
+НЛМК	NLMK	272,44	Materials
+Норильский никель	GMKN	27286	Materials
+ПАО «КАЗАНЬОРГСИНТЕЗ»	KZOS	90,9	Materials
+ПАО «КАЗАНЬОРГСИНТЕЗ» - акции привилегированные	KZOSP	35,27	Materials
+Полюс Золото	PLZL	15170,5	Materials
+Распадская	RASP	239,86	Materials
+РУСАЛ	RUAL	56,41	Materials
+Русолово	ROLO	11,51	Materials
+Русполимет	RUSP	,75	Materials
+Северсталь	CHMF	1821	Materials
+Селигдар	SELG	44,68	Materials
+Селигдар - Акции привилегированные	SELGP	44,45	Materials
+ФосАгро	PHOR	4367	Materials
+ЧЗПСН	PRFN	1,8	Materials
+ЧМК	CHMK	4200	Materials
+ЧТПЗ	CHEP	314	Materials
+ЮУНК	UNKL	9490	Materials
+MAIL.RU	MAIL	1587,6	Telecom
+Yandex	YNDX	4668,4	Telecom
+АФК Система	AFKS	33,08	Telecom
+МГТС - акции привилегированные	MGTSP	1944	Telecom
+МТС	MTSS	324,8	Telecom
+Наука-Связь	NSVZ	203,5	Telecom
+Ростелеком	RTKM	103,4	Telecom
+Ростелеком - Привилегированные акции	RTKMP	90	Telecom
+Таттелеком	TTLK	0,69	Telecom
+Центральный Телеграф	CNTL	16,06	Telecom
+Центральный Телеграф - акции привилегированные	CNTLP	,98	Telecom
+QIWI	QIWI	778	Financial
+TCS Group	TCSG	4850,2	Financial
+Банк Возрождение - акции привилегированные	VZRZP	257	Financial
+Банк ВТБ	VTBR	0,05	Financial
+Банк Санкт-Петербург	BSPB	72,9	Financial
+МКБ	CBOM	6,63	Financial
+Московская Биржа	MOEX	190,06	Financial
+САФМАР	SFIN	466,6	Financial
+Сбер Банк	SBER	307,48	Financial
+Сбер Банк - привилегированные акции	SBERP	288	Financial
+Вторая генерирующая компания оптового рынка электроэнергии	OGKB	0,81	Utilities
+Дагестанская энергосбытовая компания	DASB	0,08	Utilities
+ДЭК	DVEC	0,8	Utilities
+Интер РАО ЕЭС	IRAO	5,08	Utilities
+Иркутскэнерго	IRGZ	11,46	Utilities
+Калужская сбытовая компания	KLSB	9,89	Utilities
+Квадра	TGKD	0,01	Utilities
+Ленэнерго	LSNG	5,93	Utilities
+Ленэнерго - акции привилегированные	LSNGP	164,85	Utilities
+Мосэнерго	MSNG	2,3	Utilities
+МОЭСК	MSRS	1,22	Utilities
+МРСК Волги	MRKV	0,06	Utilities
+МРСК Северо-Запада	MRKZ	0,05	Utilities
+МРСК Сибири	MRKS	0,32	Utilities
+МРСК Урала	MRKU	,15	Utilities
+МРСК Центра	MRKC	0,43	Utilities
+МРСК Центра и Приволжья	MRKP	,29	Utilities
+МРСК Юга	MRKY	0,05	Utilities
+Пермэнергосбыт	PMSB	150,3	Utilities
+Пермэнергосбыт - акции привилегированные	PMSBP	150	Utilities
+Российские сети	RSTI	1,44	Utilities
+Российские сети - акции привилегированные	RSTIP	2,07	Utilities
+РусГидро	HYDR	0,85	Utilities
+ТГК-1	TGKA	0,01	Utilities
+ТГК-14	TGKN	0	Utilities
+ТГК-2	TGKB	0	Utilities
+ТГК-2 - акции привилегированные	TGKBP	0,01	Utilities
+ТНС энерго Воронеж	VRSB	66,6	Utilities
+ФСК ЕЭС	FEES	0,22	Utilities
+Энел Россия	ENRU	0,78	Utilities
+Юнипро	UPRO	2,86	Utilities
+Башнефть	BANE	1555	Energy
+Башнефть - привилегированные акции	BANEP	1202	Energy
+Газпром	GAZP	241,95	Energy
+Газпром нефть	SIBN	367,2	Energy
+Кузбасская топливная компания	KBTK	190	Energy
+ЛУКОЙЛ	LKOH	6000,5	Energy
+НОВАТЭК	NVTK	1405,6	Energy
+Роснефть	ROSN	532,65	Energy
+РуссНефть	RNFT	167,2	Energy
+Саратовский НПЗ - акции привилегированные	KRKNP	17040	Energy
+Сургутнефтегаз	SNGS	35,65	Energy
+Сургутнефтегаз - привилегированные акции	SNGSP	44,89	Energy
+Татнефть	TATN	516,2	Energy
+Татнефть - привилегированные акции	TATNP	482,3	Energy
+Транснефть	TRNFP	139950	Energy

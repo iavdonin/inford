@@ -1,0 +1,1 @@
+CREATE DATABASE inford_db;

@@ -1,0 +1,7 @@
+psycopg2-binary==2.8.6
+asyncpg==0.22.0
+SQLAlchemy==1.4.4
+starlette==0.14.2
+starlette-jwt==0.1.9
+uvicorn==0.13.4
+aiohttp==3.7.4.post0
