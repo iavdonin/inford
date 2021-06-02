@@ -9,7 +9,7 @@ from db import DbService
 from db.model import Base
 from rest import RESTHandler
 
-TMP_SECRET = "89fc4c0db893d94a428f8c64b4c606157c1d65cbd13f34590736b20294fc7de5"
+TMP_SECRET = "<secret_key>"
 
 
 class ClientService:
